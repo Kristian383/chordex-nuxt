@@ -1,0 +1,32 @@
+@mixin playlist-input {
+    border: 0;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    position: relative;
+
+    &:focus {
+        outline: none;
+    }
+    & ~ .focus-border {
+        position: absolute;
+        top: 2.1875rem;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: var(--font_black);
+        transition: 0.4s;
+    }
+    &:focus ~ .focus-border {
+        width: 100%;
+        transition: 0.4s;
+        left: 0;
+    }
+}
+
+@mixin input-error-msg {
+    font-size: 0.75rem;
+    text-align: start;
+    color: var(--burgundy);
+}

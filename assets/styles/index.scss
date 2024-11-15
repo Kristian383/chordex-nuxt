@@ -1,0 +1,18 @@
+
+// @import "mixins";
+// @import "colors";
+// @import "playlist_input";
+// @import "main";
+
+// assets/styles/index.scss
+
+@use "colors" as *;
+@use "fonts" as *;
+@use "mixins" as *;
+
+@use "main" as *;
+
+// @import "mixins";
+// @import "colors";
+// @import "fonts";
+// @import "main";
