@@ -1,12 +1,14 @@
 <template>
   <div>
     <div v-if="isAuthenticated" class="hamburger" @click="toggleSidebar">
-    <font-awesome-icon id="btn" icon="bars" />
+      <client-only>
+        <font-awesome-icon id="btn" icon="bars" />
+      </client-only>
   </div>
   <transition name="fade">
     <aside v-if="sidebarIsActive" class="sidebar">
       <ul class="nav_list">
-        <the-sidebar-playlist-link
+        <TheSidebarPlaylistLink
           v-for="sidebarLink in sidebarLinks"
           :key="sidebarLink.label"
           v-bind="sidebarLink"
@@ -47,6 +49,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import TheSidebarPlaylistLink from './TheSidebarPlaylistLink.vue';
 
 // import { dom } from "@fortawesome/fontawesome-svg-core";
 // dom.watch();
@@ -105,7 +108,7 @@ const sidebarLinks = [
   },
   {
     label: "Logout",
-    routeName: "home",
+    routeName: "chordex",
     iconName: "sign-out-alt",
   },
 ];

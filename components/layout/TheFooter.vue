@@ -8,11 +8,11 @@
           src="https://storage.ko-fi.com/cdn/kofi3.png?v=3"
           border="0"
           alt="Buy Me a Coffee at ko-fi.com"
-        />
+        >
       </NuxtLink>
       <span>&copy; Kristian Nenadović 2024</span>
       <div class="spotify-logo">
-        <img src="~/assets/img/spotify.webp" alt="Spotify music for song information" title="Spotify music" />
+        <img src="~/assets/img/spotify.webp" alt="Spotify music for song information" title="Spotify music" >
       </div>
       <NuxtLink class="free-pick-link" to="https://www.freepik.com/vectors/banner">
         Photos by Freepik

@@ -3,7 +3,7 @@
     <nav class="container">
       <span v-if="!hideLogo" class="logo">
         <NuxtLink to="/">
-          <img src="~/assets/img/guitar.webp" alt="Guitar" title="Chordex Music" />
+          <img src="~/assets/img/guitar.webp" alt="Guitar" title="Chordex Music" >
         </NuxtLink>
       </span>
       <div class="title"><h2>Chord<span style="color: var(--burgundy)">Ex</span> Music</h2></div>
@@ -22,8 +22,7 @@
           <NuxtLink
             class="link"
             :class="{ not_logged: isLogged }"
-            active-class="active"
-            to="/chordex"
+            to="/songs"
           >
             ChordEx
           </NuxtLink>
@@ -43,7 +42,7 @@
   </header>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 // import { useStore } from "vuex";
 import { useRoute } from 'vue-router';
@@ -64,7 +63,7 @@ const isLogged = computed(() => {
 const isNotChordex = computed(() => route.path !== '/chordex');
 
 const checkScreen = () => {
-  if (process.client) {
+  if (import.meta.client) {
     windowWidth.value = window.innerWidth;
     if (windowWidth.value <= 900) {
       // store.commit("setMobile", true);
@@ -77,7 +76,7 @@ const checkScreen = () => {
 };
 
 const updateScroll = () => {
-  if (process.client) {
+  if (import.meta.client) {
     const scrollPosition = window.scrollY;
     if (scrollPosition >= 50) {
       scrolledNav.value = true;
@@ -88,7 +87,7 @@ const updateScroll = () => {
 };
 
 onMounted(() => {
-  if (process.client) {
+  if (import.meta.client) {
     window.addEventListener("resize", checkScreen);
     window.addEventListener("scroll", updateScroll);
     checkScreen();
@@ -96,7 +95,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (process.client) {
+  if (import.meta.client) {
     window.removeEventListener("resize", checkScreen);
     window.removeEventListener("scroll", updateScroll);
   }

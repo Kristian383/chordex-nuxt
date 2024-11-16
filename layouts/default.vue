@@ -6,4 +6,11 @@
       <LayoutTheFooter />
     </div>
 </template>
-  
+<script setup>
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+useHead({
+  title: route.meta.title || 'ChordEx Music', // Default title if none is set
+});
+</script>

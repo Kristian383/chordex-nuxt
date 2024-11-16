@@ -3,6 +3,8 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "strict": true,
+    "types": ["@types/node", "@nuxtjs/sitemap"],
+    "moduleResolution": "node"
   },
   "exclude": [
     "node_modules"

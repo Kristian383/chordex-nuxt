@@ -5,11 +5,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'ChordEx Music',
-      titleTemplate: 'ChordEx Music'
-      // titleTemplate: (page) => {
-      //   const componentName = page?.name || ''; // You can customize this depending on your routing setup
-      //   return componentName ? `${componentName} - ChordEx Music` : 'ChordEx Music';
-      // },
+      titleTemplate: '%s - ChordEx Music',
     },
     // baseURL: '/prefix/'
   },
@@ -30,7 +26,7 @@ export default defineNuxtConfig({
           additionalData: `@use "~/assets/styles/mixins.scss" as *;`
         }
       }
-    }
+    },
   },
-  modules: ['@nuxt/eslint']
+  modules: ['@nuxt/eslint', '@nuxtjs/sitemap'],
 })
