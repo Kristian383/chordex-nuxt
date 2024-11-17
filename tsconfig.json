@@ -4,7 +4,11 @@
   "compilerOptions": {
     "strict": true,
     "types": ["@types/node", "@nuxtjs/sitemap"],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "paths": {
+      "~/*": ["./*"],
+      "@/*": ["./*"]
+    }
   },
   "exclude": [
     "node_modules"
