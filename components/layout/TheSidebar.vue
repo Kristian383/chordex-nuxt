@@ -50,9 +50,13 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import TheSidebarPlaylistLink from './TheSidebarPlaylistLink.vue';
+import { useUIStore } from "~/stores/ui";
+import { useAuthStore } from "~/stores/auth";
 
 // import { dom } from "@fortawesome/fontawesome-svg-core";
 // dom.watch();
+const uiStore = useUIStore();
+const authStore = useAuthStore();
 
 const sidebarLinks = [
   {
@@ -119,22 +123,20 @@ const getPlaylists = computed(() => {
 });
 
 const isAuthenticated = computed(() => {
-  // return store.getters.token; TODO: replace with pinia
+  // return authStore.isAuthenticated;
   return true;
 });
 
-const sidebarIsActive = computed(() => {
-  // return store.getters.sidebarIsActive; TODO: replace with pinia
-  return true;
-});
+const sidebarIsActive = computed(() => uiStore.isSidebarActive);
 
 const getUserData = computed(() => {
-  // return store.getters.user;  TODO: replace with pinia
+            // return store.getters.user;  TODO: replace with pinia
+  // return authStore.getUser;
   return {username: 'John Doe'}
 });
 
 function toggleSidebar() {
-  // store.commit("toggleSidebar"); TODO: replace with pinia
+  uiStore.toggleSidebar();
 }
 
 const route = useRoute();
