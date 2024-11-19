@@ -49,7 +49,10 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@use "~/assets/styles/mixins.scss" as *;`
+          additionalData: `
+            @use "~/assets/styles/mixins.scss" as *;
+            @use "~/assets/styles/auth.scss" as *;
+          `,
         }
       }
     },

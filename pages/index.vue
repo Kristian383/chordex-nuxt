@@ -2,7 +2,7 @@
   <section>
     <div class="home-welcome-container">
       <div v-if="!isLogged" class="auth-form-container">
-        <!-- <AuthForm /> -->
+        <AuthForm />
       </div>
       <div class="form-and-img-container" :class="{ logged: isLogged }">
         <div style="padding: 0 1rem">
@@ -110,7 +110,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useAuthStore } from '~/stores/auth';
-// import AuthForm from '~/components/ui/auth/new-api/AuthForm.vue';
+import AuthForm from '~/components/auth/AuthForm.vue';
 // import ScrollUp from '~/components/ui/ScrollUp.vue';
 const ScrollUp = defineAsyncComponent(() => import('~/components/ui/ScrollUp.vue'));
 import { useUIStore } from '~/stores/ui';

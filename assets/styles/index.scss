@@ -6,13 +6,8 @@
 
 // assets/styles/index.scss
 
-@use "colors" as *;
-@use "fonts" as *;
-@use "mixins" as *;
-
-@use "main" as *;
-
-// @import "mixins";
-// @import "colors";
-// @import "fonts";
-// @import "main";
+@use "./main" as *;
+@use "./fonts" as *;
+// @use "./mixins" as *;
+// @use "./auth" as *;
+@use "./playlist_input" as *;

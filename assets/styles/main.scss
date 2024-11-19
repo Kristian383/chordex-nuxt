@@ -1,10 +1,20 @@
+$font_black: #101114;
+$dark_blue_sidebar: #0d1117;
+$levi_blue: #1b233a;
+$f1_gray: #f1f1f1;
+$burgundy: #c22a2a;
+$green: #69b34c;
+$white: #fff;
+$orange: #ff4500;
+$dark_gray_font: #424242;
+$gray-medium-3: #cccccc;
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-
 
 #app {
     min-height: 100vh;
@@ -16,25 +26,24 @@
   }
   
   :root {
-    /* --dark_blue: #11101d; */
-    --dark_blue_sidebar: #0d1117;
-    --teals: #11101d;
-    --f1_gray: #f1f1f1;
+    --dark_blue_sidebar: #{$dark_blue_sidebar};
+    --f1_gray: #{$f1_gray};
+    --border-gray: #{$gray-medium-3};
     --dark_gray_chips: #242424;
-    --font_black: #101114;
+    --font_black: #{$font_black};
     --text_gray: #878787;
     --chips_gray: #e7e7e7;
     --chips_gray_hover: #e4e4e7;
     --light_gray: #f5f5f5;
     --mid_gray: #888888;
-    --dark_gray_font: #424242;
+    --dark_gray_font: #{$dark_gray_font};
     --form_gray: #eaebea;
-    --white: #fff;
-    --burgundy: #c22a2a;
-    --orange: #ff4500;
-    --green: #69b34c;
+    --white: #{$white};
+    --burgundy: #{$burgundy};
+    --orange: #{$orange};
+    --green: #{$green};
     --save_button_green: #6fc982;
-    --levi_blue: #1b233a;
+    --levi_blue: #{$levi_blue};
     --levi_red: #b0253c;
     --light_blue: #1f75fe;
   }
