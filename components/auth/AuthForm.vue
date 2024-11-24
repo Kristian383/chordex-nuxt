@@ -52,6 +52,11 @@
 </template>
 
 <script setup lang="ts">
+import TheLoader from '~/components/ui/TheLoader.vue';
+import ForgotForm from '~/components/auth/ForgotForm.vue';
+import LoginForm from '~/components/auth/LoginForm.vue';
+import RegisterForm from '~/components/auth/RegisterForm.vue';
+
 import { ref } from 'vue';
 
 const ForgotForm = defineAsyncComponent(() => import('~/components/auth/ForgotForm.vue'));
@@ -78,8 +83,8 @@ function openResetForm() {
   showReset.value = true;
 }
 
-function setRequestLoading(data: boolean) {
-  reqIsLoading.value = data;
+function setRequestLoading(status: boolean) {
+  reqIsLoading.value = status;
 }
 </script>
 
