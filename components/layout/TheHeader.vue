@@ -13,19 +13,15 @@
             Home
           </NuxtLink>
         </li>
-        <li 
-        :class="{
-          pulsing: isNotChordex,
-          'chordex-header-li': true
-        }"
-        >
+        <li :class="{ pulsing: routeIsNotChordex }">
           <NuxtLink
             class="link"
-            :class="{ not_logged: isLogged }"
+            :class="{ not_logged: !isLogged}"
             to="/songs"
-          >
+            >
             ChordEx
           </NuxtLink>
+          <!-- TODO: add tooltip (and lock icon) saying You have to be logged in. -->
         </li>
         <li>
           <NuxtLink class="link" active-class="active" to="/about">
@@ -44,23 +40,21 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-// import { useStore } from "vuex";
-import { useRoute } from 'vue-router';
+import { useAuthStore } from "~/stores/auth";
 
 const route = useRoute();
 
-// const store = useStore();
+const authStore = useAuthStore();
 
 const scrolledNav = ref(false);  // TypeScript infers this as a boolean
 const hideLogo = ref(false);     // TypeScript infers this as a boolean
 const windowWidth = ref(0);      // Default as 0, to be set on the client side
 
 const isLogged = computed(() => {
-  // return !store.getters.token; TODO: replace with PINIA
-  return false;
+  return authStore.isAuthenticated;
 });
 
-const isNotChordex = computed(() => route.path !== '/chordex');
+const routeIsNotChordex = computed(() => route.path !== '/chordex');
 
 const checkScreen = () => {
   if (import.meta.client) {

@@ -1,9 +1,4 @@
 <template>
-  <!-- <div>
-    <LayoutTheHeader />
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div> -->
   <div>
     <NuxtLayout>
       <NuxtPage/>
@@ -12,6 +7,9 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from "~/stores/auth";
+import {  onMounted } from 'vue';
+
 useSeoMeta({
   title: 'My Amazing Site',
   ogTitle: 'My Amazing Site',
@@ -20,4 +18,10 @@ useSeoMeta({
   // ogImage: 'https://example.com/image.png',
   // twitterCard: 'summary_large_image',
 })
+
+const authStore = useAuthStore();
+
+onMounted(() => {
+  authStore.tryLogin();
+});
 </script>

@@ -2,7 +2,10 @@
   <section>
     <div class="home-welcome-container">
       <div v-if="!isLogged" class="auth-form-container">
-        <AuthForm />
+        <!-- TODO: use popup design and put icon in header -->
+        <ClientOnly>
+          <AuthForm />
+        </ClientOnly>
       </div>
       <div class="form-and-img-container" :class="{ logged: isLogged }">
         <div style="padding: 0 1rem">
@@ -118,7 +121,6 @@ import { useUIStore } from '~/stores/ui';
 definePageMeta({
   title: 'Home | Chordex',
   description: 'Customize your music library, keep track of songs and store them at one place with Chordex.',
-  requiresUnauth: true, // Custom meta for middleware
   canonicalUrl: 'https://chordex.net/home',
 });
 
@@ -127,9 +129,8 @@ const authStore = useAuthStore();
 const uiStore = useUIStore();
 
 const showBackToTop = ref(false);
-const homeImage = ref('~/assets/img/home.webp');
 
-const isLogged = computed(() => !!authStore.isAuthenticated);
+const isLogged = computed(() => authStore.isAuthenticated);
 
 function showButtonUp() {
   showBackToTop.value = window.scrollY > 800;

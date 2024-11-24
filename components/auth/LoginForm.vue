@@ -11,6 +11,7 @@
           </span>
           <input
             v-model.trim="userEmail"
+            autocomplete="email"
             type="email"
             class="form-control"
             placeholder="Email address"
@@ -43,7 +44,7 @@
           />
         </div>
         <div class="auth-btn-container">
-          <google-btn @click="googleAuth"></google-btn>
+          <!-- <google-btn @click="googleAuth"></google-btn> -->
         </div>
       </section>
       <p class="forgot" @click="openResetForm">Forgot password?</p>
@@ -60,15 +61,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, PropType } from "vue";
-import GoogleBtn from "./GoogleBtn.vue";
+import { ref, computed } from "vue";
+// import GoogleBtn from "./GoogleBtn.vue";
 import { useAuthStore } from "~/stores/auth";
 import { useUIStore } from "~/stores/ui";
+// import { useTurnstile } from '~/composables/useTurnstile';
+
 interface Props {
   requestIsLoading: boolean;
+  captchaToken: string,
 }
 
-const { requestIsLoading } = defineProps<Props>();
+const { requestIsLoading, captchaToken } = defineProps<Props>();
+
+// TODO: uncomment after captchaToken is configured
+// const { verifyTurnstile } = useTurnstile();
+// console.log("captchaToken u login", captchaToken)
 
 // Define emits
 const emit = defineEmits<{
@@ -102,29 +110,38 @@ const togglePassword = (): void => {
 const lockType = computed<string>(() => (showPswd.value ? "lock-open" : "lock"));
 const pswdType = computed<string>(() => (showPswd.value ? "text" : "password"));
 
-const googleAuth = async (): Promise<void> => {
-  emit("isLoading", true);
+// const googleAuth = async (): Promise<void> => {
+//   emit("isLoading", true);
 
-  const googleResponse = await authStore.signInWithGoogle(); // Replace with your Pinia action
-  if (!googleResponse.google_token) {
-    errorText.value = googleResponse.msg;
-    emit("isLoading", false);
-    return;
-  }
+//   const googleResponse = await authStore.signInWithGoogle(); // Replace with your Pinia action
+//   if (!googleResponse.google_token) {
+//     errorText.value = googleResponse.msg;
+//     emit("isLoading", false);
+//     return;
+//   }
 
-  const backendResponse = await authStore.firebaseBackendCall(googleResponse.google_token);
-  if (backendResponse.success) {
-    emit("isLoading", false);
+//   const backendResponse = await authStore.firebaseBackendCall(googleResponse.google_token);
+//   if (backendResponse.success) {
+//     emit("isLoading", false);
 
-    navigateTo("/songs");
-    uiStore.activateSidebar();
-  } else {
-    errorText.value = backendResponse.message;
-    emit("isLoading", false);
-  }
-};
+//     navigateTo("/songs");
+//     uiStore.activateSidebar();
+//   } else {
+//     errorText.value = backendResponse.message;
+//     emit("isLoading", false);
+//   }
+// };
 
 const submitForm = async (): Promise<void> => {
+  // TODO: uncomment after tunrstile is set up
+  // const isValidTurnstile = await verifyTurnstile(captchaToken);
+
+  // if (!isValidTurnstile ) {
+  //   formIsValid.value = true;
+  //   errorText.value = "Captcha verification failed.";
+  //   return;
+  // }
+
   formIsValid.value = true;
   errorText.value = "";
   goodRequest.value = false;
@@ -144,14 +161,21 @@ const submitForm = async (): Promise<void> => {
     mode: "login",
   };
 
-  const response = await authStore.auth(payload);
-  if (authStore.token) {
-    navigateTo("/songs"); 
-    uiStore.activateSidebar();
-  } else {
-    formIsValid.value = false;
-    errorText.value = response;
-  }
+  try {
+    const response = await authStore.authenticateUser(payload);
+    if (authStore.token) {
+      navigateTo("/songs"); 
+      uiStore.activateSidebar();
+    } else {
+      formIsValid.value = false;
+      errorText.value = response;
+    }
+    } catch (error) {
+      console.error("Error during authentication:", error);
+      formIsValid.value = false;
+      errorText.value = "An unexpected error occurred. Please try again.";
+
+    }
 
   emit("isLoading", false);
 };
@@ -159,13 +183,12 @@ const submitForm = async (): Promise<void> => {
 
 
 <style lang="scss" scoped>
-// @import "@/assets/styles/mixins.scss";
-// @import "@/assets/styles/colors.scss";
-// @import "@/assets/styles/auth.scss";
-
 .form-container {
   background: #fefefe;
-  padding: 25px 30px 12px 30px;
+  // padding: 25px 30px 12px 30px;
+  min-height: 290px;
+  padding: 1.25rem 1.25rem; // 5.625rem;
+  
   .input-group {
     @include input-group;
   }

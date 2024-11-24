@@ -60,17 +60,19 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxtjs/sitemap'],
   router: { // TODO: this covers what router guards did
     options: {
-      middleware: ['auth', 'meta'], // Global middleware
-      scrollBehavior(to, from, savedPosition) {
-        if (to.hash) {
-          return { el: to.hash, behavior: 'smooth' };
-        } else if (savedPosition) {
-          return savedPosition;
-        } else {
-          return { top: 0, left: 0, behavior: 'smooth' };
-        }
-      },
-
-    },
+      scrollBehaviorType: "smooth",
+    }
+    // middleware: ['auth'], // Global middleware
+    // options: {
+    //   scrollBehavior(to, from, savedPosition) {
+    //     if (to.hash) {
+    //       return { el: to.hash, behavior: 'smooth' };
+    //     } else if (savedPosition) {
+    //       return savedPosition;
+    //     } else {
+    //       return { top: 0, left: 0, behavior: 'smooth' };
+    //     }
+    //   },
+    // },
   },
 })

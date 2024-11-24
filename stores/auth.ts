@@ -6,11 +6,16 @@ import  { jwtDecode } from "jwt-decode";
 // import { auth } from "@/firebase";
 // import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
+// interface User {
+//   username: string;
+//   email: string;
+// }
+
 interface State {
-  token: string | null
-  user: Record<string, any>
-  didAutoLogout: boolean
-  cookieConsent: string | null
+  token: string | null;
+  user: Record<string, any>;
+  didAutoLogout: boolean;
+  cookieConsent: string | null;
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -22,8 +27,8 @@ export const useAuthStore = defineStore("auth", {
   }),
 
   getters: {
-      isAuthenticated(state) { // TODO: rename to isAuthenticated
-        return state.token;
+      isAuthenticated(state) {
+        return !!state.token;
       },
       hasAutoLoggedOut(state) {
         return state.didAutoLogout;
@@ -37,6 +42,13 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
+    setUser(user: Record<string, any>) {
+      this.user = user;
+    },
+    setToken(token: string) {
+      this.token = token;
+      localStorage.setItem('token', token);
+    },
     logout() {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
@@ -48,14 +60,14 @@ export const useAuthStore = defineStore("auth", {
       // TODO:: call to clear other states (clearVuex in old project)
     },
 
-    async auth(payload: { mode: string; user: { email: string; password: string; username?: string } }) {
-      const url = payload.mode === "signup"
-        ? new URL("api/register", process.env.VUE_APP_URL)
-        : new URL("api/login", process.env.VUE_APP_URL);
+    async authenticateUser(payload: { mode: string; user: { email: string; password: string; username?: string } }) {
+      const { apiUrl } = useApiUrl();
+
+      const url = payload.mode === "signup" ? apiUrl("register") : apiUrl("login");
 
       let response;
       try {
-        response = await fetch(url.toString(), {
+        response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -149,10 +161,10 @@ export const useAuthStore = defineStore("auth", {
       const token = localStorage.getItem("token");
       const username = localStorage.getItem("username");
       const email = localStorage.getItem("email");
+  
       if (!token) return;
 
       const expiresIn = jwtDecode(token).exp;
-      console.log("expiresIn", expiresIn);
       
       const currentTime = Math.round(Date.now() / 1000);
 
@@ -161,8 +173,6 @@ export const useAuthStore = defineStore("auth", {
       } else {
         this.user = { username, email };
         this.token = token;
-
-        // Load additional data if necessary
       }
     },
 
@@ -289,23 +299,3 @@ export const useAuthStore = defineStore("auth", {
     },
   },
 });
-
-
-// export const useAuthStore = defineStore('auth', {
-//   state,
-//   getters: {
-//     token(state) {
-//         return state.token;
-//       },
-//       didAutoLogout(state) {
-//         return state.didAutoLogout;
-//       },
-//       user(state) {
-//         return state.user;
-//       },
-//       checkCookieConsent(state) {
-//         return state.cookieConsent || localStorage.getItem("cookieConsent");
-//       },
-//   },
-//   actions,
-// });

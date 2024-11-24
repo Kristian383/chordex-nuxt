@@ -37,9 +37,7 @@
       </div>
 
       <div class="input-group">
-        <span
-          class="icon"
-        >
+        <span class="icon">
           <client-only>
             <font-awesome-icon :icon="lockType" @click="togglePassword"></font-awesome-icon>
           </client-only>
@@ -152,8 +150,9 @@ const submitForm = async (): Promise<void> => {
     mode: "signup",
   };
 
-  const response = await authStore.auth(payload);
-  if (authStore.getters.token) {
+  const response = await authStore.authenticateUser(payload);
+
+  if (authStore.isAuthenticated) {
       router.push("/songs");
       uiStore.activateSidebar();
       errorText.value = "Successfully registered.";
@@ -183,8 +182,9 @@ const submitForm = async (): Promise<void> => {
 <style lang="scss" scoped>
 .form-container {
   background: #fefefe;
-  padding: 1.5625rem 1.875rem 5.625rem;
+  padding: 1.25rem 1.25rem; // 5.625rem;
   position: relative;
+  min-height: 290px;
 
 
   .input-group {

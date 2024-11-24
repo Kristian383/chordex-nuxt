@@ -99,7 +99,9 @@ function openLoginForm() {
 <style lang="scss" scoped>
 .form-container {
   background: #fefefe;
-  padding: 25px 30px 12px 30px;
+  // padding: 25px 30px 12px 30px;
+  padding: 1.25rem 1.25rem; // 5.625rem;
+
   .input-group {
     @include input-group;
   }

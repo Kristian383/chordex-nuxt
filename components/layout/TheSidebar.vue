@@ -112,7 +112,7 @@ const sidebarLinks = [
   },
   {
     label: "Logout",
-    routeName: "chordex",
+    routeName: "",
     iconName: "sign-out-alt",
   },
 ];
@@ -123,8 +123,7 @@ const getPlaylists = computed(() => {
 });
 
 const isAuthenticated = computed(() => {
-  // return authStore.isAuthenticated;
-  return true;
+  return authStore.isAuthenticated;
 });
 
 const sidebarIsActive = computed(() => uiStore.isSidebarActive);
@@ -145,15 +144,12 @@ const isActiveRoute = (routeName: string) => {
 };
 
 function logOutUser() {
-  // TODO: replace with pinia
-  // store.dispatch("logout");
-  // store.commit("removeSidebar");
+  authStore.logout();
+  uiStore.removeSidebar();
 }
 </script>
 
 <style lang="scss" scoped>
-// @use "@/assets/styles/mixins" as *;
-
 .hamburger {
   position: fixed;
   top: 1.5rem;
