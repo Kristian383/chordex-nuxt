@@ -5,9 +5,7 @@
       <section>
         <div class="input-group">
           <span>
-            <ClientOnly>
               <font-awesome-icon icon="envelope"></font-awesome-icon>
-            </ClientOnly>
           </span>
           <input
             v-model.trim="userEmail"
@@ -25,13 +23,11 @@
           <span
             class="icon"
           >
-          <ClientOnly >
             <font-awesome-icon
               :icon="lockType"
               @click="togglePassword"
             >
             </font-awesome-icon>
-          </ClientOnly>
           </span>
           <input
             v-model.trim="userPassword"
@@ -44,13 +40,11 @@
           />
         </div>
         <div class="auth-btn-container">
-          <ClientOnly>
             <google-btn @click="handleGoogleSignIn"></google-btn>
-          </ClientOnly>
         </div>
       </section>
       <p class="forgot" @click="openResetForm">Forgot password?</p>
-      <p v-if="errorText" class="feedback-text" :class="{ valid: goodRequest }">
+      <p  class="feedback-text" :class="{ valid: goodRequest }">
         {{ errorText }}
       </p>
     </div>
@@ -69,20 +63,19 @@ import { useAuthStore } from "~/stores/auth";
 import { useUIStore } from "~/stores/ui";
 import { useGoogleAuth } from "~/composables/useGoogleAuth";
 import { useFirebaseBackendAuth } from "~/composables/useFirebaseBackendAuth";
-// import { useTurnstile } from '~/composables/useTurnstile';
+import { useTurnstile } from '~/composables/useTurnstile';
 
 interface Props {
   requestIsLoading: boolean;
-  captchaToken?: string, // TODO: change to required after captchaToken is configured
+  captchaToken?: string,
 }
 
 const { requestIsLoading, captchaToken } = defineProps<Props>();
 const { signInWithGoogle } = useGoogleAuth();
 const { firebaseBackendAuth } = useFirebaseBackendAuth();
 
-// TODO: uncomment after captchaToken is configured
-// const { verifyTurnstile } = useTurnstile();
-// console.log("captchaToken u login", captchaToken)
+const { verifyTurnstile } = useTurnstile();
+ console.log("captchaToken u login", captchaToken)
 
 // Define emits
 const emit = defineEmits<{
@@ -117,14 +110,18 @@ const lockType = computed<string>(() => (showPswd.value ? "lock-open" : "lock"))
 const pswdType = computed<string>(() => (showPswd.value ? "text" : "password"));
 
 const submitForm = async (): Promise<void> => {
-  // TODO: uncomment after tunrstile is set up
-  // const isValidTurnstile = await verifyTurnstile(captchaToken);
+  if (!captchaToken) {
+     formIsValid.value = false;
+     errorText.value = "Captcha verification failed. Please try again.";
+      return;
+  }
 
-  // if (!isValidTurnstile ) {
-  //   formIsValid.value = true;
-  //   errorText.value = "Captcha verification failed.";
-  //   return;
-  // }
+  const isValidTurnstile = await verifyTurnstile(captchaToken);
+  if (!isValidTurnstile) {
+    formIsValid.value = false;
+     errorText.value = "Captcha verification failed. Please try again.";
+    return;
+  }
 
   formIsValid.value = true;
   errorText.value = "";
@@ -134,6 +131,7 @@ const submitForm = async (): Promise<void> => {
   if (!userEmail.value || !userPassword.value || !userEmail.value.includes("@")) {
     formIsValid.value = false;
     emit("is-loading", false);
+    errorText.value = "Please enter a valid email and password.";
     return;
   }
 
@@ -159,7 +157,6 @@ const submitForm = async (): Promise<void> => {
       formIsValid.value = false;
       errorText.value = "An unexpected error occurred. Please try again.";
     } finally {
-      console.log("finall is loading false")
       emit("is-loading", false);
     }
 };
@@ -195,7 +192,6 @@ const handleGoogleSignIn = async () => {
     emit("is-loading", false);
   }
 };
-
 </script>
 
 <style lang="scss" scoped>

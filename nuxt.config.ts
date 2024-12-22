@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
+  modules: ['@nuxt/eslint', '@nuxtjs/sitemap', '@nuxtjs/turnstile', '@nuxt/scripts'],
   app: {
     head: {
       // title: 'ChordEx Music',
@@ -47,13 +48,15 @@ export default defineNuxtConfig({
       FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     },
-    // turnstile: {
-    //   secretKey:'1x00000000000000000000AA' // process.env.TURNSTILE_SECRET_KEY,
-    // },
+    turnstile: {
+      // secretKey:'1x00000000000000000000AA' // process.env.TURNSTILE_SECRET_KEY,
+      secretKey:process.env.NUXT_TURNSTILE_SECRET_KEY // process.env.TURNSTILE_SECRET_KEY,
+     },
   },
-  // turnstile: {
-  //   siteKey: '3x00000000000000000000FF' //process.env.NUXT_TURNSTILE_SITE_KEY,
-  // },
+   turnstile: {
+     siteKey: process.env.NUXT_TURNSTILE_SITE_KEY, //process.env.NUXT_TURNSTILE_SITE_KEY,
+    //  siteKey: '3x00000000000000000000FF' //process.env.NUXT_TURNSTILE_SITE_KEY,
+   },
   css: ["~/assets/styles/index.scss"], // Registers the global stylesheet
   vite: {
     css: {
@@ -67,22 +70,20 @@ export default defineNuxtConfig({
       }
     },
   },
-  modules: ['@nuxt/eslint', '@nuxtjs/sitemap'],
   router: { // TODO: this covers what router guards did
     options: {
       scrollBehaviorType: "smooth",
     }
-    // middleware: ['auth'], // Global middleware
-    // options: {
-    //   scrollBehavior(to, from, savedPosition) {
-    //     if (to.hash) {
-    //       return { el: to.hash, behavior: 'smooth' };
-    //     } else if (savedPosition) {
-    //       return savedPosition;
-    //     } else {
-    //       return { top: 0, left: 0, behavior: 'smooth' };
-    //     }
-    //   },
-    // },
   },
+  // auth: {
+  //   isEnabled: true,
+  //   disableServerSideAuth: false,
+  //   originEnvKey: 'AUTH_ORIGIN',
+  //   baseURL: 'http://localhost:3000/api/auth',
+  //   provider: { /* your provider config */ },
+  //   sessionRefresh: {
+  //     enablePeriodically: true,
+  //     enableOnWindowFocus: true,
+  //   }
+  // }
 })

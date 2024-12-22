@@ -16,7 +16,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@nuxt/eslint": "^0.6.1",
+    "@nuxt/scripts": "^0.9.5",
     "@nuxtjs/sitemap": "^6.1.5",
+    "@nuxtjs/turnstile": "^0.9.11",
     "firebase": "^11.0.2",
     "jwt-decode": "^4.0.0",
     "nuxt": "^3.14.159",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
+    "@types/node-fetch": "^2.6.12",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.0",

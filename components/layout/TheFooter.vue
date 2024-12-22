@@ -4,6 +4,7 @@
       <NuxtLink href="https://ko-fi.com/I2I0JPDGB">
         <img
           height="36"
+          width="144"
           style="border:0px;height:36px;"
           src="https://storage.ko-fi.com/cdn/kofi3.png?v=3"
           border="0"

@@ -26,6 +26,7 @@
             :request-is-loading="reqIsLoading"
             @open-reset-form="openResetForm"
             @is-loading="setRequestLoading"
+            :captchaToken="captchaToken"
           />
         </div>
         <!-- reset -->
@@ -34,6 +35,7 @@
             :request-is-loading="reqIsLoading"
             @open-login="openLoginForm"
             @is-loading="setRequestLoading"
+            :captchaToken="captchaToken"
           />
         </div>
         <!-- signup -->
@@ -41,9 +43,18 @@
           <RegisterForm
             :request-is-loading="reqIsLoading"
             @is-loading="setRequestLoading"
+            :captchaToken="captchaToken"
           />
         </div>
       </transition>
+       <!-- NuxtTurnstile Captcha -->
+        <NuxtTurnstile
+          @error="onCaptchaError"
+          @expired="onCaptchaExpired"
+          v-model="captchaToken"
+          ref="turnstile"
+          class="chordex-turnstile"
+        />
       <div v-if="reqIsLoading" class="loader">
         <TheLoader />
       </div>
@@ -59,14 +70,22 @@ import RegisterForm from '~/components/auth/RegisterForm.vue';
 
 import { ref } from 'vue';
 
-const ForgotForm = defineAsyncComponent(() => import('~/components/auth/ForgotForm.vue'));
-const LoginForm = defineAsyncComponent(() => import('~/components/auth/LoginForm.vue'));
-const RegisterForm = defineAsyncComponent(() => import('~/components/auth/RegisterForm.vue'));
-const TheLoader = defineAsyncComponent(() => import('~/components/ui/TheLoader.vue'));
-
 const showLogin = ref(true);
 const showReset = ref(false);
 const reqIsLoading = ref(false);
+
+const captchaToken = ref('');
+const turnstile = ref();
+
+function onCaptchaError(error: any) {
+  console.error("Turnstile Error:", error);
+  captchaToken.value = '';
+}
+
+function onCaptchaExpired() {
+  console.warn("Turnstile token expired.");
+  captchaToken.value = '';
+}
 
 function openRegisterForm() {
   showReset.value = false;
@@ -154,5 +173,11 @@ function setRequestLoading(status: boolean) {
   left: 0;
   right: 0;
   bottom: 50%;
+}
+
+.chordex-turnstile {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 }
 </style>
