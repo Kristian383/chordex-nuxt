@@ -31,20 +31,30 @@ export default defineNuxtConfig({
           `,
         },
       ],
-    },
-    // baseURL: '/prefix/'
-    
+    },    
   },
   runtimeConfig: {
     // The private keys which are only available server-side
     apiSecret: '123',
     // Keys within public are also exposed client-side
     public: {
-      apiBase: process.env.VUE_APP_URL // || 'http://localhost:8000',
-    }
+      apiBase: process.env.NODE_ENV === "production" ? "/api" : "", // Use "/api" in production, no prefix in development
+      apiDomain: process.env.NUXT_APP_URL,
+      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+      FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+      FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+    },
+    // turnstile: {
+    //   secretKey:'1x00000000000000000000AA' // process.env.TURNSTILE_SECRET_KEY,
+    // },
   },
-  // Registers the global stylesheet
-  css: ["~/assets/styles/index.scss"],
+  // turnstile: {
+  //   siteKey: '3x00000000000000000000FF' //process.env.NUXT_TURNSTILE_SITE_KEY,
+  // },
+  css: ["~/assets/styles/index.scss"], // Registers the global stylesheet
   vite: {
     css: {
       preprocessorOptions: {

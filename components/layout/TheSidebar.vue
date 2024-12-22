@@ -129,9 +129,7 @@ const isAuthenticated = computed(() => {
 const sidebarIsActive = computed(() => uiStore.isSidebarActive);
 
 const getUserData = computed(() => {
-            // return store.getters.user;  TODO: replace with pinia
-  // return authStore.getUser;
-  return {username: 'John Doe'}
+  return authStore.getUser;
 });
 
 function toggleSidebar() {

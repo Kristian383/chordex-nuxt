@@ -44,7 +44,9 @@
           />
         </div>
         <div class="auth-btn-container">
-          <!-- <google-btn @click="googleAuth"></google-btn> -->
+          <ClientOnly>
+            <google-btn @click="handleGoogleSignIn"></google-btn>
+          </ClientOnly>
         </div>
       </section>
       <p class="forgot" @click="openResetForm">Forgot password?</p>
@@ -62,17 +64,21 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-// import GoogleBtn from "./GoogleBtn.vue";
+import GoogleBtn from "./GoogleBtn.vue";
 import { useAuthStore } from "~/stores/auth";
 import { useUIStore } from "~/stores/ui";
+import { useGoogleAuth } from "~/composables/useGoogleAuth";
+import { useFirebaseBackendAuth } from "~/composables/useFirebaseBackendAuth";
 // import { useTurnstile } from '~/composables/useTurnstile';
 
 interface Props {
   requestIsLoading: boolean;
-  captchaToken: string,
+  captchaToken?: string, // TODO: change to required after captchaToken is configured
 }
 
 const { requestIsLoading, captchaToken } = defineProps<Props>();
+const { signInWithGoogle } = useGoogleAuth();
+const { firebaseBackendAuth } = useFirebaseBackendAuth();
 
 // TODO: uncomment after captchaToken is configured
 // const { verifyTurnstile } = useTurnstile();
@@ -81,7 +87,7 @@ const { requestIsLoading, captchaToken } = defineProps<Props>();
 // Define emits
 const emit = defineEmits<{
   (e: "openResetForm"): void;
-  (e: "isLoading", status: boolean): void;
+  (e: "is-loading", status: boolean): void;
 }>();
 
 const userEmail = ref<string>("");
@@ -110,28 +116,6 @@ const togglePassword = (): void => {
 const lockType = computed<string>(() => (showPswd.value ? "lock-open" : "lock"));
 const pswdType = computed<string>(() => (showPswd.value ? "text" : "password"));
 
-// const googleAuth = async (): Promise<void> => {
-//   emit("isLoading", true);
-
-//   const googleResponse = await authStore.signInWithGoogle(); // Replace with your Pinia action
-//   if (!googleResponse.google_token) {
-//     errorText.value = googleResponse.msg;
-//     emit("isLoading", false);
-//     return;
-//   }
-
-//   const backendResponse = await authStore.firebaseBackendCall(googleResponse.google_token);
-//   if (backendResponse.success) {
-//     emit("isLoading", false);
-
-//     navigateTo("/songs");
-//     uiStore.activateSidebar();
-//   } else {
-//     errorText.value = backendResponse.message;
-//     emit("isLoading", false);
-//   }
-// };
-
 const submitForm = async (): Promise<void> => {
   // TODO: uncomment after tunrstile is set up
   // const isValidTurnstile = await verifyTurnstile(captchaToken);
@@ -145,11 +129,11 @@ const submitForm = async (): Promise<void> => {
   formIsValid.value = true;
   errorText.value = "";
   goodRequest.value = false;
-  emit("isLoading", true);
+  emit("is-loading", true);
 
   if (!userEmail.value || !userPassword.value || !userEmail.value.includes("@")) {
     formIsValid.value = false;
-    emit("isLoading", false);
+    emit("is-loading", false);
     return;
   }
 
@@ -174,20 +158,51 @@ const submitForm = async (): Promise<void> => {
       console.error("Error during authentication:", error);
       formIsValid.value = false;
       errorText.value = "An unexpected error occurred. Please try again.";
+    } finally {
+      console.log("finall is loading false")
+      emit("is-loading", false);
+    }
+};
 
+const handleGoogleSignIn = async () => {
+  try {
+    emit("is-loading", true);
+    const { google_token, msg } = await signInWithGoogle();
+
+    // If there's no Google token, handle the error
+    if (!google_token) {
+      errorText.value = msg || "Google sign-in failed.";
+      console.error("Sign-in failed:", msg || "No Google token received.");
+      return;
     }
 
-  emit("isLoading", false);
-};
-</script>
+    // Authenticate with the backend using the Google token
+    const backendResponse = await firebaseBackendAuth(google_token);
+    const { success, message } = backendResponse;
 
+    // Handle backend authentication response
+    if (success) {
+      navigateTo("/songs");
+      uiStore.activateSidebar();
+    } else {
+      errorText.value = message || "Backend authentication failed.";
+      console.error("Backend sign-in failed:", message || "Unknown error.");
+    }
+  } catch (error) {
+    errorText.value = "An unexpected error occurred.";
+    console.error("An unexpected error occurred during sign-in:", error);
+  } finally {
+    emit("is-loading", false);
+  }
+};
+
+</script>
 
 <style lang="scss" scoped>
 .form-container {
   background: #fefefe;
-  // padding: 25px 30px 12px 30px;
   min-height: 290px;
-  padding: 1.25rem 1.25rem; // 5.625rem;
+  padding: 1.25rem 1.25rem;
   
   .input-group {
     @include input-group;

@@ -3,9 +3,6 @@ import  { jwtDecode } from "jwt-decode";
 
 // import { actions } from './actions';
 
-// import { auth } from "@/firebase";
-// import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-
 // interface User {
 //   username: string;
 //   email: string;
@@ -85,65 +82,6 @@ export const useAuthStore = defineStore("auth", {
       }
 
       this.setUserAndLoadData({ ...responseData, email: payload.user.email });
-    },
-
-    // TODO: pinia
-    // async signInWithGoogle() {
-    //   const provider = new GoogleAuthProvider();
-    //   provider.addScope("profile");
-    //   provider.addScope("email");
-
-    //   let response: Record<string, any> = {};
-
-    //   try {
-    //     await signInWithPopup(auth, provider).then((result) => {
-    //       const user = result.user;
-    //       response.google_token = user.accessToken;
-    //       response.msg = "Success.";
-    //     });
-    //   } catch (error: any) {
-    //     response.google_token = false;
-
-    //     switch (error.code) {
-    //       case "auth/user-not-found":
-    //         response.msg = "User not found";
-    //         break;
-    //       case "auth/wrong-password":
-    //         response.msg = "Wrong password";
-    //         break;
-    //       case "auth/popup-closed-by-user":
-    //         response.msg = "You closed the popup window.";
-    //         break;
-    //       default:
-    //         response.msg = "Something went wrong";
-    //     }
-    //   }
-    //   return response;
-    // },
-
-    async firebaseBackendCall(google_token: string) {
-      const url = new URL("api/firebase", process.env.VUE_APP_URL);
-
-      let response;
-      try {
-        response = await fetch(url.toString(), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ google_token }),
-        });
-      } catch {
-        return { message: "Something went wrong.", success: false };
-      }
-
-      const responseData = await response.json();
-      if (!response.ok) {
-        return { message: responseData.message, success: false };
-      }
-
-      this.setUserAndLoadData(responseData);
-      return { success: true, message: "ok" };
     },
 
     async setUserAndLoadData(payload: { user: string; token: string; email: string }) {
