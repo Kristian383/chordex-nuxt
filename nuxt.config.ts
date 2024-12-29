@@ -5,7 +5,10 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxtjs/sitemap', '@nuxtjs/turnstile', '@nuxt/scripts'],
   app: {
     head: {
-      // title: 'ChordEx Music',
+      htmlAttrs: {
+        lang: 'en',
+      },
+      title: 'ChordEx Music',
       // titleTemplate: '%s - ChordEx Music',
       meta: [
         { charset: 'utf-8' },
@@ -75,6 +78,7 @@ export default defineNuxtConfig({
       scrollBehaviorType: "smooth",
     }
   },
+  
   // auth: {
   //   isEnabled: true,
   //   disableServerSideAuth: false,

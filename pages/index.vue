@@ -24,8 +24,8 @@
               /assets/img/home_small.webp 430w,
               /assets/img/home_medium.webp 950w,
               /assets/img/home.webp 2000w
-              "
-              sizes="(max-width: 630px) 300px, 568px"
+            "
+            sizes="(max-width: 630px) 300px, 568px"
           />
         </div>
       </div>

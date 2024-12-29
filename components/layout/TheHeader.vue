@@ -1,9 +1,9 @@
 <template>
   <header :class="{ 'scrolled-nav': scrolledNav }">
-    <nav class="container">
+    <nav class="header-container">
       <span v-if="!hideLogo" class="logo">
         <NuxtLink to="/">
-          <img src="~/assets/img/guitar.webp" alt="Guitar" title="Chordex Music" >
+          <img width="50" height="50" src="~/assets/img/guitar.webp" alt="Guitar" title="Chordex Music" >
         </NuxtLink>
       </span>
       <div class="title"><h2>Chord<span style="color: var(--burgundy)">Ex</span> Music</h2></div>
@@ -13,7 +13,7 @@
             Home
           </NuxtLink>
         </li>
-        <li :class="{ pulsing: routeIsNotChordex }">
+        <li :class="{ pulsing: routeIsNotChordex }"   :title="!isLogged ? 'Please login to enter the app.' : 'Chordex App'">
           <NuxtLink
             class="link"
             :class="{ not_logged: !isLogged}"
@@ -46,9 +46,9 @@ const route = useRoute();
 
 const authStore = useAuthStore();
 
-const scrolledNav = ref(false);  // TypeScript infers this as a boolean
-const hideLogo = ref(false);     // TypeScript infers this as a boolean
-const windowWidth = ref(0);      // Default as 0, to be set on the client side
+const scrolledNav = ref(false);
+const hideLogo = ref(true);
+const windowWidth = ref(0); // Default as 0, to be set on the client side
 
 const isLogged = computed(() => {
   return authStore.isAuthenticated;
@@ -134,6 +134,7 @@ header nav {
   margin: 0 auto;
   width: 100%;
   position: relative;
+  gap:0.5rem;
 }
 
 header .navigation {
@@ -147,6 +148,11 @@ header .navigation {
 
     .link {
       color: var(--white);
+
+      &.not_logged {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
     }
   }
 }
@@ -200,10 +206,6 @@ header nav .link {
 header nav .link:hover {
   color: #d8323c;
 }
-header nav .link.not_logged {
-  color: var(--mid_gray);
-  pointer-events: none;
-}
 header nav .link.active {
   border-color: #d8323c;
 }
@@ -211,26 +213,7 @@ header nav .logo {
   display: flex;
   align-items: center;
 }
-header nav .logo img {
-  width: 3.125rem;
-  height: 3.125rem;
-  transition: 0.5s ease all;
-}
 .scrolled-nav nav {
   padding: 0.5rem 0;
-}
-.scrolled-nav nav .logo img {
-  width: 2.5rem;
-}
-.mobile-nav-enter-active,
-.mobile-nav-leave-active {
-  transition: 1s ease all;
-}
-.mobile-nav-enter-from,
-.mobile-nav-leave-to {
-  transform: translateX(-250px);
-}
-.mobile-nav-enter-to {
-  transform: translateX(0);
 }
 </style>
