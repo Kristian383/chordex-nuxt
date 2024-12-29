@@ -5,7 +5,9 @@
       <section>
         <div class="input-group">
           <span>
+            <client-only>
               <font-awesome-icon icon="envelope"></font-awesome-icon>
+            </client-only>
           </span>
           <input
             v-model.trim="userEmail"
@@ -23,11 +25,13 @@
           <span
             class="icon"
           >
+          <client-only>
             <font-awesome-icon
               :icon="lockType"
               @click="togglePassword"
             >
             </font-awesome-icon>
+          </client-only>
           </span>
           <input
             v-model.trim="userPassword"
@@ -110,18 +114,19 @@ const lockType = computed<string>(() => (showPswd.value ? "lock-open" : "lock"))
 const pswdType = computed<string>(() => (showPswd.value ? "text" : "password"));
 
 const submitForm = async (): Promise<void> => {
-  if (!captchaToken) {
-     formIsValid.value = false;
-     errorText.value = "Captcha verification failed. Please try again.";
-      return;
-  }
+  // TODO: Uncomment this when Turnstile is enabled
+  // if (!captchaToken) {
+  //    formIsValid.value = false;
+  //    errorText.value = "Captcha verification failed. Please try again.";
+  //     return;
+  // }
 
-  const isValidTurnstile = await verifyTurnstile(captchaToken);
-  if (!isValidTurnstile) {
-    formIsValid.value = false;
-     errorText.value = "Captcha verification failed. Please try again.";
-    return;
-  }
+  // const isValidTurnstile = await verifyTurnstile(captchaToken);
+  // if (!isValidTurnstile) {
+  //   formIsValid.value = false;
+  //    errorText.value = "Captcha verification failed. Please try again.";
+  //   return;
+  // }
 
   formIsValid.value = true;
   errorText.value = "";

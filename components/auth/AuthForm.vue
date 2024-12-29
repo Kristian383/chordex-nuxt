@@ -48,13 +48,13 @@
         </div>
       </transition>
        <!-- NuxtTurnstile Captcha -->
-        <NuxtTurnstile
+        <!-- <NuxtTurnstile
           @error="onCaptchaError"
           @expired="onCaptchaExpired"
           v-model="captchaToken"
           ref="turnstile"
           class="chordex-turnstile"
-        />
+        /> -->
       <div v-if="reqIsLoading" class="loader">
         <TheLoader />
       </div>
@@ -63,12 +63,14 @@
 </template>
 
 <script setup lang="ts">
+import { ref, defineAsyncComponent  } from 'vue';
 import TheLoader from '~/components/ui/TheLoader.vue';
-import ForgotForm from '~/components/auth/ForgotForm.vue';
 import LoginForm from '~/components/auth/LoginForm.vue';
-import RegisterForm from '~/components/auth/RegisterForm.vue';
+const ForgotForm = defineAsyncComponent(() => import('~/components/auth/ForgotForm.vue'));
+const RegisterForm = defineAsyncComponent(() => import('~/components/auth/RegisterForm.vue'));
+// import ForgotForm from '~/components/auth/ForgotForm.vue';
+// import RegisterForm from '~/components/auth/RegisterForm.vue';
 
-import { ref } from 'vue';
 
 const showLogin = ref(true);
 const showReset = ref(false);
