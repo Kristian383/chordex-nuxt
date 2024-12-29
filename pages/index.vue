@@ -3,9 +3,9 @@
     <div class="home-welcome-container">
       <div v-if="!isLogged" class="auth-form-container">
         <!-- TODO: use popup design and put icon in header -->
-        <ClientOnly>
+        <!-- <ClientOnly> -->
           <AuthForm />
-        </ClientOnly>
+        <!-- </ClientOnly> -->
       </div>
       <div class="form-and-img-container" :class="{ logged: isLogged }">
         <div style="padding: 0 1rem">
@@ -14,8 +14,19 @@
           </h2>
           <h3>Customize your music library - keep track of songs and store them in one place</h3>
         </div>
-        <div>
-          <img src="~/assets/img/home.webp" alt="Guitarist writing notes in a book" title="Guitarist writing notes in a book" />
+        <div class="image-container">
+          <img
+            src="/assets/img/home_small.webp"
+            alt="Guitarist writing notes in a book"
+            title="Guitarist writing notes in a book"
+            class="responsive-img"
+            srcset="
+              /assets/img/home_small.webp 430w,
+              /assets/img/home_medium.webp 950w,
+              /assets/img/home.webp 2000w
+              "
+              sizes="(max-width: 630px) 300px, 568px"
+          />
         </div>
       </div>
     </div>
@@ -31,7 +42,20 @@
         <p>Whether you're a beginner or a pro, it has everything you need to take your music to the next level.</p>
         <p><b>Sign up</b> for ChordEx today and start practicing like a pro!</p>
       </div>
-      <img src="~/assets/img/home_cards.webp" alt="Display of Chordex app features" class="app-image" />
+      <div class="image-container">
+
+        <img 
+        src="~/assets/img/home_cards_small.webp"
+        srcset="
+        /assets/img/home_cards_small.webp 480w,
+        /assets/img/home_cards.webp 1600w
+        "
+        sizes="(max-width: 768px) 430px, (max-width: 1080px) 500px, 1000px"
+
+        alt="Display of Chordex app features"
+        class="app-image"
+        />
+      </div>
     </div>
 
    <!-- items -->
@@ -39,7 +63,7 @@
       <h2>VIRTUAL SONGBOOK FOR ANY MUSICIAN</h2>
       <div class="items">
         <div class="item" style="grid-area: item1;">
-          <h4>YouTube video integration</h4>
+          <h3>YouTube video integration</h3>
           <img src="~/assets/img/yt.webp" alt="YouTube music video integration" title="YouTube music video integration" />
           <p>
             Paste YouTube link of a song or a lesson and have it displayed
@@ -47,7 +71,7 @@
           </p>
         </div>
         <div class="item" style="grid-area: item2;">
-          <h4>Metronome</h4>
+          <h3>Metronome</h3>
           <img src="~/assets/img/metro.webp" alt="Metronome" title="Metronome" />
           <p>
             After inserting tempo (BPM) of each song, you get a feature to play
@@ -55,28 +79,28 @@
           </p>
         </div>
         <div class="item" style="grid-area: item3;">
-          <h4>Virtual Songbook</h4>
+          <h3>Virtual Songbook</h3>
           <img src="~/assets/img/book.webp" alt="Virtual song book" title="Virtual song book" />
           <p>
             Store all your favorite songs, chord progressions, and lyrics in one place.
           </p>
         </div>
         <div class="item" style="grid-area: item4;">
-          <h4>Faster learning</h4>
+          <h3>Faster learning</h3>
           <img src="~/assets/img/thinking.webp" alt="Faster learning of an instrument" title="Faster learning of an instrument" />
           <p>
             You can keep track of learned songs and easily recall all of them.
           </p>
         </div>
         <div class="item" style="grid-area: item5;">
-          <h4>Playlists</h4>
+          <h3>Playlists</h3>
           <img src="~/assets/img/song_playlists.webp" alt="Song playlists" title="Song playlists" />
           <p>
             Easily organize and find your songs by adding them to custom playlists.
           </p>
         </div>
         <div class="item" style="grid-area: item6;">
-          <h4>Song BPM and key</h4>
+          <h3>Song BPM and key</h3>
           <img src="~/assets/img/search.webp" alt="Search information about a song" title="Search information about a song" />
           <p>
             Find the BPM (tempo) and key of any song by typing in the artist and song name.
@@ -85,11 +109,19 @@
       </div>
     </div>
     <!-- products -->
-    <div class="products-wrapper-bckg">
-      <div class="products">
-        <div class="product">
-          <div class="product-image">
-            <img src="~/assets/img/app_features_ui.webp" alt="Features and UI of the Chordex website" title="Features and UI of the Chordex website" />
+    <div class="features-container">
+          <div class="features-image-container">
+            <img 
+              src="~/assets/img/app_features_ui_small.webp" 
+              srcset="
+              /assets/img/app_features_ui_small.webp 430w,
+              /assets/img/app_features_ui_medium.webp 650w,
+              /assets/img/app_features_ui.webp 1640w
+              "
+              sizes="(max-width: 500px) 300px, (max-width: 800px) 400px, (max-width: 1000px) 500px,  (max-width: 1600px) 600px, 1000px"
+              alt="Features and UI of the Chordex website" 
+              title="Features and UI of the Chordex website"
+               />
           </div>
           <div class="product-info">
             <p>Built-in features:</p>
@@ -103,8 +135,8 @@
               <li>Store often used websites in a list</li>
             </ul>
           </div>
-        </div>
-      </div>
+        <!-- </div> -->
+      <!-- </div> -->
     </div>    
     <ScrollUp :class="{ show: showBackToTop }" />
   </section>
@@ -159,7 +191,8 @@ onBeforeUnmount(() => {
 
   .auth-form-container {
     position: relative;
-    // min-height: 37.5rem;
+    min-height: 30.625rem;
+    // min-height: 490px; TODO: replace after turnstile is added
     margin-top: 2rem;
     display: flex;
     justify-content: center;
@@ -167,20 +200,12 @@ onBeforeUnmount(() => {
   }
   
   .form-and-img-container {
-    // height: 90vh;
     text-align: center;
     padding-top: 1rem;
 
     h2 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      max-height: 500px;
-      object-fit: contain;
     }
   }
   
@@ -205,11 +230,13 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+
   .app-image {
-      width: 100%;
-      height: 100%;
-      max-height: 700px;
       object-fit: contain;
+
+      @media (max-width: 460px) {
+        width: 300px;
+      }
     }
 
     .details-container {
@@ -217,10 +244,8 @@ onBeforeUnmount(() => {
       padding: 1rem;
       position: relative;
       color: var(--dark_blue_sidebar);
-      // background-color: #f8f8f8;
       background: #FFE5E6;
       background: linear-gradient(120deg, rgba(255,229,230,1) 0%, rgba(255,229,230,1) 35%, rgba(255,255,255,1) 100%);
-      // box-shadow: rgba(0, 0, 0, 0.1) 0 0 5px 0, rgba(0, 0, 0, 0.1) 0 0 1px 0;
       box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
       .details-container-header {
@@ -232,7 +257,6 @@ onBeforeUnmount(() => {
         padding-bottom: 0.5rem;
 
         h3 {
-          // color: var(--burgundy);
           text-align: center;
         }
       }
@@ -293,66 +317,78 @@ onBeforeUnmount(() => {
 }
 
 .items .item {
-  width: 300px;
+  width: 18.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background-color: #fff;
-  gap: 18px;
+  gap: 1rem;
   transition: 0.3s ease-in all;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   cursor: pointer;
-  padding: 14px;
+  padding: 0.875rem;
+
+  &:hover {
+    transform: rotateZ(-1deg) scale(1.04);
+  }
+
+  p {
+    text-align: center;
+    color: var(--dark_gray_font);
+    line-height: 24px;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
 }
-.items .item:hover {
-  transform: rotateZ(-1deg) scale(1.04);
-}
-.items .item p {
-  text-align: center;
-  color: var(--dark_gray_font);
-  line-height: 24px;
-}
-.products-wrapper-bckg {
-  height: 100%;
-  padding-bottom: 18px;
-}
-.products {
+.features-container {
   display: grid;
-  grid-template-columns: 1fr;
-  max-width: 1700px;
-  margin: 0 auto;
+  justify-content: center;
+  
+  .products {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 1700px;
+    margin: 0 auto;
+    
+    .product {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      justify-items: center;
+
+    }
+  }
+
+  @media (min-width: 1000px) {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
 }
 
-.product {
-  display: grid;
-  height: 600px;
-  grid-template-columns: 1fr;
-  align-items: center;
-  justify-items: center;
-}
-.product-image {
+.features-image-container {
   order: 2;
-}
-.product-image img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+
+  img {
+    object-fit: contain;
+  }
 }
+
 .product-info {
   background-color: #fff;
   display: flex;
   color: var(--dark_gray_font);
-
   flex-direction: column;
-  padding: 24px;
-  border-radius: 8px;
+  padding: 1.5rem;
   font-size: 20px;
-  line-height: 28px;
-  gap: 44px;
   order: 1;
-  max-width: 600px;
 }
 .product-info p {
   font-weight: 600;
@@ -366,14 +402,23 @@ onBeforeUnmount(() => {
   padding-top: 8px;
 }
 .product-info ul li:before {
-  /* content: "\2713\0020"; */
-  /* content:"\2611\0020";  */
   content: "\2714\0020";
   color: var(--green);
 }
-@media (min-width: 1000px) {
-  .product {
-    grid-template-columns: 1fr 1fr;
+
+
+// IMAGES
+.image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+@media (max-width: 360px) {
+  .responsive-img {
+    width: 250px;
   }
 }
 </style>
