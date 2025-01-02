@@ -53,7 +53,7 @@
       </p>
     </div>
     <div class="form-footer">
-      <button class="btn" :disabled="requestIsLoading" @click.prevent="submitForm">
+      <button class="btn" :disabled="requestIsLoading" @click.prevent="handleLogin">
         Log In
       </button>
     </div>
@@ -67,19 +67,18 @@ import { useAuthStore } from "~/stores/auth";
 import { useUIStore } from "~/stores/ui";
 import { useGoogleAuth } from "~/composables/useGoogleAuth";
 import { useFirebaseBackendAuth } from "~/composables/useFirebaseBackendAuth";
-import { useTurnstile } from '~/composables/useTurnstile';
+// import { useTurnstile } from '~/composables/useTurnstile';
 
 interface Props {
   requestIsLoading: boolean;
   captchaToken?: string,
 }
 
-const { requestIsLoading, captchaToken } = defineProps<Props>();
+const { requestIsLoading } = defineProps<Props>();
 const { signInWithGoogle } = useGoogleAuth();
 const { firebaseBackendAuth } = useFirebaseBackendAuth();
 
-const { verifyTurnstile } = useTurnstile();
- console.log("captchaToken u login", captchaToken)
+// const { verifyTurnstile } = useTurnstile();
 
 // Define emits
 const emit = defineEmits<{
@@ -113,7 +112,7 @@ const togglePassword = (): void => {
 const lockType = computed<string>(() => (showPswd.value ? "lock-open" : "lock"));
 const pswdType = computed<string>(() => (showPswd.value ? "text" : "password"));
 
-const submitForm = async (): Promise<void> => {
+const handleLogin = async (): Promise<void> => {
   // TODO: Uncomment this when Turnstile is enabled
   // if (!captchaToken) {
   //    formIsValid.value = false;
@@ -150,12 +149,12 @@ const submitForm = async (): Promise<void> => {
 
   try {
     const response = await authStore.authenticateUser(payload);
-    if (authStore.token) {
+    if (response.success) {
       navigateTo("/songs"); 
       uiStore.activateSidebar();
     } else {
       formIsValid.value = false;
-      errorText.value = response;
+      errorText.value = response.message;;
     }
     } catch (error) {
       console.error("Error during authentication:", error);

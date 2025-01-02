@@ -1,17 +1,21 @@
 import { defineStore } from 'pinia';
 import  { jwtDecode } from "jwt-decode";
 
-// import { actions } from './actions';
+interface AuthStatusResponse {
+  authenticated: boolean;
+  user?: {
+    id: number;
+    username: string;
+    email: string;
+  };
+  message?: string;
+}
 
-// interface User {
-//   username: string;
-//   email: string;
-// }
 
 interface State {
   token: string | null;
   user: Record<string, any>;
-  didAutoLogout: boolean;
+  isLoggedIn: boolean;
   cookieConsent: string | null;
 }
 
@@ -19,16 +23,13 @@ export const useAuthStore = defineStore("auth", {
   state: (): State => ({
     user: {},
     token: null,
-    didAutoLogout: false,
+    isLoggedIn: false,
     cookieConsent: null,
   }),
 
   getters: {
       isAuthenticated(state) {
-        return !!state.token;
-      },
-      hasAutoLoggedOut(state) {
-        return state.didAutoLogout;
+        return state.isLoggedIn;
       },
       getUser(state) {
         return state.user;
@@ -50,11 +51,10 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
       localStorage.removeItem("email");
-
       this.user = {};
       this.token = null;
-      this.didAutoLogout = false;
-      // TODO:: call to clear other states (clearVuex in old project)
+      this.isLoggedIn = false;
+      navigateTo("/");
     },
 
     async authenticateUser(payload: { mode: string; user: { email: string; password: string; username?: string } }) {
@@ -62,62 +62,77 @@ export const useAuthStore = defineStore("auth", {
 
       const url = payload.mode === "signup" ? apiUrl("register") : apiUrl("login");
 
-      let response;
       try {
-        response = await fetch(url, {
+        const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload.user),
         });
+
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          throw new Error(errorResponse.message || "Authentication failed");
+        }
+
+        const responseData = await response.json();
+        this.setUserAndLoadData(responseData);
+        return { success: true, message: "Authentication successful" };
       } catch (error) {
-        console.error(error);
-        return "There was an error!";
+        console.error("Authentication error:", error);
+        return { success: false, message: (error as Error).message || "An unexpected error occurred" };
       }
-
-      const responseData = await response.json();
-      if (!response.ok) {
-        return responseData.message;
-      }
-
-      this.setUserAndLoadData({ ...responseData, email: payload.user.email });
     },
 
     async setUserAndLoadData(payload: { user: string; token: string; email: string }) {
-      localStorage.setItem("token", payload.token);
-      localStorage.setItem("username", payload.user);
-      localStorage.setItem("email", payload.email);
+      const { user, token, email } = payload;
 
-      this.user = { username: payload.user, email: payload.email };
-      this.token = payload.token;
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", user);
+      localStorage.setItem("email", email);
 
-      // Load additional data if necessary
+      // Update the store state
+      this.user = { username: user, email };
+      this.token = token;
+      this.isLoggedIn = true;
     },
 
-    async tryLogin() {
-      const token = localStorage.getItem("token");
-      const username = localStorage.getItem("username");
-      const email = localStorage.getItem("email");
-  
-      if (!token) return;
-
-      const expiresIn = jwtDecode(token).exp;
+    async checkAuthStatus(): Promise<boolean> {
+      const { apiUrl } = useApiUrl();
       
-      const currentTime = Math.round(Date.now() / 1000);
+      try {
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
 
-      if (expiresIn && expiresIn - currentTime < 0) {
-        this.autoLogout();
-      } else {
-        this.user = { username, email };
-        this.token = token;
+        if (!token || !email) {
+          console.warn("Token or email is missing in localStorage.");
+          return false;
+        }
+
+        const response = await $fetch<AuthStatusResponse>(apiUrl("auth-status"), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (response?.authenticated) {
+          this.isLoggedIn = true;
+          return true;
+        } else {
+          console.warn("Authentication check failed:", response.message || "Unknown error");
+          this.isLoggedIn = false;
+          return false;
+        }
+      } catch (error) {
+          console.error('Error validating token with backend:', error);
+          this.isLoggedIn = false;
+          return false;
       }
-    },
-
-    autoLogout() {
-      this.logout();
-      this.didAutoLogout = true;
-    },
+  },
 
     async forgotPassword(email: string) {
       const url = new URL("api/forgotpassword", process.env.VUE_APP_URL);

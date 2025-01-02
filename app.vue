@@ -22,6 +22,7 @@ useSeoMeta({
 const authStore = useAuthStore();
 
 onMounted(() => {
-  authStore.tryLogin();
+  // authStore.tryLogin();
+  authStore.checkAuthStatus();
 });
 </script>
